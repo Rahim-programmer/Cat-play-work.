@@ -17,8 +17,8 @@ public enum State implements Event {
                 cat.playWithTheCat(getStepOfChanging(cat).get(0));
                 System.out.printf("\nВы покормили кота %s, возраст которого - %s\n", cat.getName(), cat.getAge());
                 cat.setPlayer(true);
-            }else {
-                System.out.println("Кот уже наелся и не хочет есть\n");
+            }else if(cat.isPlayer()){
+                System.out.println("\nНа сегодня все!\n");
                 cat.setPlayer(false);
             }
         }
@@ -31,8 +31,8 @@ public enum State implements Event {
                 cat.playWithTheСat(getStepOfChanging(cat));
                 System.out.printf("\nВы поиграли с котом %s, возраст которого - %s", cat.getName(), cat.getAge());
                 cat.setPlayer(true);
-            }else {
-                System.out.println("Кот уже устал\n");
+            }else if(cat.isPlayer()){
+                System.out.println("\nНа сегодня все!\n");
                 cat.setPlayer(false);
             }
         }
@@ -45,8 +45,8 @@ public enum State implements Event {
                 cat.HealTheСat(getStepOfChanging(cat));
                 System.out.printf("\nВы отвезли к ветеринару кота %s, возраст которого - %s\n", cat.getName(), cat.getAge());
                 cat.setPlayer(true);
-            }else {
-                System.out.println("Кот уже устал и он хочет спать\n");
+            }else if(cat.isPlayer()){
+                System.out.println("\nНа сегодня все!\n");
                 cat.setPlayer(false);
             }
         }
@@ -122,9 +122,6 @@ public enum State implements Event {
         this.value = value;
     }
 
-    public String getValue() {
-        return value;
-    }
 
     static List<Integer> getStepOfChanging(Cat cat) {
         if (cat.getAge() < 6) {

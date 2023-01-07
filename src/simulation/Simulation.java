@@ -29,15 +29,7 @@ public class Simulation {
             ProgramFunctionality();
         }
     }
-    static int ParsingTheAgeOfTheError(String str) throws Exception {
-        if (str == null) {
-            throw new NullPointerException("Выражение null!");
-        }
-        if (str.length() < 1) {
-            throw new NumberFormatException("Значения является пустым!");
-        }
-        return Integer.parseInt(str);
-    }
+
     static void ProgramFunctionality() {
         String energy;
         System.out.println("\n1: Покормить\n" +
