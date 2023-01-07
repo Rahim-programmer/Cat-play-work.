@@ -1,3 +1,5 @@
+package cat;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -87,14 +89,12 @@ public class Cat {
     }
 
     public static List<Cat> makeCats(int amount) {
-        return Stream.generate(Cat::new)
-                .limit(amount)
-                .collect(Collectors.toList());
+        return Stream.generate(Cat::new).limit(amount).collect(Collectors.toList());
     }
 
     public Cat() {
         name = getRandomName(names.get(random.nextInt(names.size())));
-        age = random.nextInt(15) + 5;
+        age = random.nextInt(15) + 4;
         satiety = random.nextInt(41) + 40;
         mood = random.nextInt(31) + 51;
         health = random.nextInt(21) + 60;
@@ -110,18 +110,24 @@ public class Cat {
         return name;
     }
 
-    public void healCat(List<Integer> number) {
+
+    public void playWithTheCat(int number){
+        upSatiety(number);
+        upMood(number);
+        characteristicChange();
+    }
+    public void HealTheСat(List<Integer> number) {
         addHealth(number.get(0));
         downMood(number.get(1));
         downSatiety(number.get(1));
-//        updateAverage();
+        characteristicChange();
     }
 
-    public void playCat(List<Integer> number) {
+    public void playWithTheСat(List<Integer> number) {
         addHealth(number.get(0));
         upMood(number.get(0));
         downSatiety(number.get(1));
-//        updateAverage();
+        characteristicChange();
     }
 
 
@@ -147,6 +153,9 @@ public class Cat {
 
     public void downSatiety(int satiety) {
         setSatiety(Math.max(getSatiety() - satiety, 0));
+    }
+    public void characteristicChange() {
+        average = (satiety + mood + health) / 3;
     }
 
 }

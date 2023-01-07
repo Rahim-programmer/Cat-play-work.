@@ -1,4 +1,4 @@
-import java.util.Comparator;
+import simulation.Simulation;
 
 public class Main {
     public static void main(String[] args) {

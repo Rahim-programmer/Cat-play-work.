@@ -1,54 +1,70 @@
+package state;
+
+import event.Event;
+import cat.Cat;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
 public enum State implements Event {
-    EAT("Кормить кота"){
+    EAT("Кормить кота") {
         @Override
         public void start(List<Cat> cats) {
             Cat cat = cats.get(getNumberOfCats(cats));
-            if(!cat.isPlayer()) {
-                cat.playCat(getStepOfChanging(cat));
-                System.out.printf("Вы покормили кота %s, возраст которого - %s\n", cat.getName(), cat.getAge());
+            if (!cat.isPlayer()) {
+                cat.playWithTheCat(getStepOfChanging(cat).get(0));
+                System.out.printf("\nВы покормили кота %s, возраст которого - %s\n", cat.getName(), cat.getAge());
                 cat.setPlayer(true);
+            }else {
+                System.out.println("Кот уже наелся и не хочет есть\n");
+                cat.setPlayer(false);
             }
         }
     },
-    PLAY("Играть с котом"){
+    PLAY("Играть с котом") {
         @Override
         public void start(List<Cat> cats) {
             Cat cat = cats.get(getNumberOfCats(cats));
-            if(!cat.isPlayer()) {
-                cat.playCat(getStepOfChanging(cat));
-                System.out.printf("Вы поиграли с котом %s, возраст которого - %s\n", cat.getName(), cat.getAge());
+            if (!cat.isPlayer()) {
+                cat.playWithTheСat(getStepOfChanging(cat));
+                System.out.printf("\nВы поиграли с котом %s, возраст которого - %s", cat.getName(), cat.getAge());
                 cat.setPlayer(true);
+            }else {
+                System.out.println("Кот уже устал\n");
+                cat.setPlayer(false);
             }
         }
     },
-    HEAL("Лечить кота"){
+    HEAL("Вылечить кота") {
         @Override
         public void start(List<Cat> cats) {
             Cat cat = cats.get(getNumberOfCats(cats));
-            if(!cat.isPlayer()) {
-                cat.healCat(getStepOfChanging(cat));
-                System.out.printf("Вы отвезли к ветеринару кота %s, возраст которого - %s\n", cat.getName(), cat.getAge());
+            if (!cat.isPlayer()) {
+                cat.HealTheСat(getStepOfChanging(cat));
+                System.out.printf("\nВы отвезли к ветеринару кота %s, возраст которого - %s\n", cat.getName(), cat.getAge());
                 cat.setPlayer(true);
+            }else {
+                System.out.println("Кот уже устал и он хочет спать\n");
+                cat.setPlayer(false);
             }
         }
     },
-    ADD("Добавить кота"){
+
+
+    ADD("Добавить кота") {
         @Override
         public void start(List<Cat> cats) {
             String newName;
             int newAge;
             System.out.print("Хотите завести нового кота в ручную? (Y/N): ");
-            if(console.nextLine().equalsIgnoreCase("Y")){
+            if (scanner.nextLine().equalsIgnoreCase("Y")) {
                 System.out.println("Замечательно!");
                 while (true) {
                     try {
                         System.out.print("Введите имя кота:");
-                        newName = checkName(console.nextLine());
+                        newName = checkName(scanner.nextLine());
                     } catch (NumberFormatException | NullPointerException e) {
                         System.out.println(e.getMessage());
                         continue;
@@ -61,7 +77,7 @@ public enum State implements Event {
                 while (true) {
                     try {
                         System.out.print("Введите возраст кота:");
-                        newAge = tryParseAge(console.nextLine());
+                        newAge = tryParseAge(scanner.nextLine());
                     } catch (NumberFormatException | NullPointerException e) {
                         System.out.println(e.getMessage());
                         continue;
@@ -69,10 +85,10 @@ public enum State implements Event {
                         System.out.println("Введите числовое значение");
                         continue;
                     }
-                    if(newAge > 18){
+                    if (newAge > 18) {
                         System.out.println("Неправильный возраст кота. Исследование показывает, что коты живут до 18 лет!");
                         continue;
-                    }else if(newAge < 1){
+                    } else if (newAge < 1) {
                         System.out.println("Неправильный возраст кота. Этот кот еще не родился!");
                         continue;
                     }
@@ -88,7 +104,9 @@ public enum State implements Event {
             }
         }
     },
-    NEXT_DAY("Следующий день"){
+
+
+    NEXT_DAY("Следующий день") {
         @Override
         public void start(List<Cat> cats) {
             cats.forEach(Cat::nextDays);
@@ -96,9 +114,9 @@ public enum State implements Event {
     };
 
     private String value;
-    static final Scanner console = new Scanner(System.in);
+    static final Scanner scanner = new Scanner(System.in);
 
-    private static final Random rnd = new Random();
+    private static final Random random = new Random();
 
     State(String value) {
         this.value = value;
@@ -108,21 +126,21 @@ public enum State implements Event {
         return value;
     }
 
-    static List<Integer> getStepOfChanging(Cat cat){
-        if(cat.getAge() < 6){
+    static List<Integer> getStepOfChanging(Cat cat) {
+        if (cat.getAge() < 6) {
             return List.of(7, 3);
-        } else if(cat.getAge() < 11){
+        } else if (cat.getAge() < 11) {
             return List.of(5, 5);
         }
         return List.of(4, 6);
     }
 
-    public int getNumberOfCats(List<Cat> cats){
+    public int getNumberOfCats(List<Cat> cats) {
         int number;
         while (true) {
             try {
                 System.out.printf("Введите номер кота (1-%s): ", cats.size());
-                number = tryParseAge(console.nextLine());
+                number = tryParseAge(scanner.nextLine());
             } catch (NumberFormatException | NullPointerException e) {
                 System.out.println(e.getMessage());
                 continue;
@@ -130,32 +148,34 @@ public enum State implements Event {
                 System.out.println("Введите числовое значение");
                 continue;
             }
-            if(number < 1 || number > cats.size()){
-                System.out.println("Кота с таким номером нету в списке!");
+            if (number < 1 || number > cats.size()) {
+                System.out.println("Данного кота в списке нету!");
                 continue;
             }
             break;
         }
         return number - 1;
     }
-    static int tryParseAge(String str) throws Exception{
-        if(str == null){
+
+    static int tryParseAge(String str) throws Exception {
+        if (str == null) {
             throw new NullPointerException("Значение null!");
         }
-        if(str.length() < 1){
+        if (str.length() < 1) {
             throw new NumberFormatException("Пустое значение!");
         }
         return Integer.parseInt(str);
     }
+
     static String checkName(String str) throws Exception {
-        if(str == null){
+        if (str == null) {
             throw new NullPointerException("Значение null!");
         }
-        if(str.length() < 1){
+        if (str.length() < 1) {
             throw new NumberFormatException("Пустое значение!");
         }
-        for(int i = 0; i < str.length(); i++){
-            if(isInteger(str.charAt(i))){
+        for (int i = 0; i < str.length(); i++) {
+            if (isInteger(str.charAt(i))) {
                 throw new Exception("Введите имя без числовых значений");
             }
         }
@@ -165,9 +185,9 @@ public enum State implements Event {
     static boolean isInteger(char r) {
         try {
             Integer.parseInt(String.valueOf(r));
-        } catch(NumberFormatException ext) {
+        } catch (NumberFormatException ext) {
             return false;
-        } catch(NullPointerException ext) {
+        } catch (NullPointerException ext) {
             return false;
         }
         return true;
