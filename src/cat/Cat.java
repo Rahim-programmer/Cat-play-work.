@@ -103,19 +103,25 @@ public class Cat {
     }
 
     private String getRandomName(String name) {
-        if (cat.contains(name)) {
-            return getRandomName(names.get(random.nextInt(names.size())));
+        try {
+            if (cat.contains(name)) {
+                return getRandomName(names.get(random.nextInt(names.size())));
+            }
+            cat.add(name);
+            return name;
+        } catch (StackOverflowError error) {
+            System.out.println("Котов больше нету!");
         }
-        cat.add(name);
         return name;
     }
 
 
-    public void playWithTheCat(int number){
+    public void playWithTheCat(int number) {
         upSatiety(number);
         upMood(number);
         characteristicChange();
     }
+
     public void HealTheСat(List<Integer> number) {
         addHealth(number.get(0));
         downMood(number.get(1));
@@ -154,6 +160,7 @@ public class Cat {
     public void downSatiety(int satiety) {
         setSatiety(Math.max(getSatiety() - satiety, 0));
     }
+
     public void characteristicChange() {
         average = (satiety + mood + health) / 3;
     }
