@@ -103,11 +103,12 @@ public class Cat {
     }
 
     private String getRandomName(String name) {
-//        if(usedNames.contains(name)){
-        return getRandomName(names.get(random.nextInt(names.size())));
+        if (cat.contains(name)) {
+            return getRandomName(names.get(random.nextInt(names.size())));
+        }
+        cat.add(name);
+        return name;
     }
-//        usedNames.add(name);
-//        return name;
 
     public void healCat(List<Integer> number) {
         addHealth(number.get(0));
